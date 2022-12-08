@@ -1,0 +1,113 @@
+{% extends "title_base.html" %}
+{% load staticfiles %}
+
+{% block header_extends %}
+    <link type="image/x-icon" rel="shortcut icon" href="{% static 'favicon.ico' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'css/common.css' %}">
+    <link type="text/css" rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock %}
+
+{% block content %}
+    <body class="member">
+    <div class="header">
+        <a href="/" class="logo" title="首页"><img src="{% static 'image/logo.png' %}"></a>
+        <div class="search-box">
+            <form id="searchForm" action="{% url 'search' 1 %}" method="post" target="_blank">
+                {% csrf_token %}
+                <div class="search-keyword">
+                    <input id="kword" name="kword" type="text" class="keyword" maxlength="120" placeholder="Keyword"/>
+                </div>
+                <input id="subSerch" type="submit" class="search-button" value="Search"/>
+            </form>
+            <div id="suggest" class="search-suggest"></div>
+            <div class="search-hot-words">
+                {% for song in search_song %}
+                    <a target="play" href="{% url 'play' song.song.song_id %}">{{ song.song.song_title }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div><!--end header-->
+
+    <div class="nav-box">
+        <div class="nav-box-inner">
+            <ul class="nav clearfix">
+                <li><a href="/">Home</a></li>
+                <li><a href="{% url 'ranking' %}" target="_blank">Ranking</a></li>
+                <li><a href="{% url 'home' 1 %}" target="_blank">User Center</a></li>
+            </ul>
+        </div>
+    </div><!--end nav-box-->
+
+    <div class="mod_profile js_user_data" style="">
+        <div class="section_inner">
+            <div class="profile__cover_link">
+                <img src="{% static 'image/user.jpg' %}" class="profile__cover">
+            </div>
+            <h1 class="profile__tit">
+                <span class="profile__name">{{ user.username }}</span>
+            </h1>
+            <a href="{% url 'logout' %}" style="color:white;">Logout</a>
+        </div>
+    </div>
+
+    <div class="main main--profile" style="">
+        <div class="mod_tab profile_nav" role="nav" id="nav">
+            <span class="mod_tab__item mod_tab__current" id="hear_tab">Listened</span>
+        </div>
+        <div class="js_box" style="display: block;">
+            <div class="profile_cont">
+                <div class="js_sub" style="display: block;">
+                    <div class="mod_songlist">
+                        <ul class="songlist__header">
+                            <li class="songlist__header_name">Title</li>
+                            <li class="songlist__header_author">Artist</li>
+{#                            <li class="songlist__header_author">Album</li>#}
+                        </ul>
+                        <ul class="songlist__list">
+                            {% for item in contacts.object_list %}
+                                <li>
+                                    <div class="songlist__item songlist__item--even">
+                                        <div class="songlist__songname">
+                                            <a href="{% url 'play' item.song_id %}" class="js_song songlist__songname_txt">{{ item.song_title }}</a>
+                                        </div>
+                                        <div class="songlist__artist">
+                                            <p class="singer_name">{{ item.song_artist }}</p>
+                                        </div>
+{#                                        <div class="songlist__artist">#}
+{#                                            <p class="singer_name">{{ item.song_album }}</p>#}
+{#                                        </div>#}
+{#                                        <div class="singer_name">{{ item.song_album }}</div>#}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div><!--end mod_songlist-->
+
+                    <!--分页-->
+                    <div class="page-box">
+                        <div class="pagebar" id="pageBar">
+
+                            {% if contacts.has_previous %}
+                                <a href="{% url 'home' contacts.previous_page_number %}" class="prev" target="_self"><i></i>Prev</a>
+                            {% endif %}
+
+                            {% for page in contacts.paginator.page_range %}
+                                {% if contacts.number == page %}
+                                    <span class="sel">{{ page }}</span>
+                                {% else %}
+                                    <a href="{% url 'home' page %}" target="_self">{{ page }}</a>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if contacts.has_next %}
+                                <a href="{% url 'home' contacts.next_page_number %}" class="next" target="_self">Next<i></i></a>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><!-- end main -->
+
+{% endblock %}
