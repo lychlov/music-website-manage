@@ -27,18 +27,19 @@ class Song(models.Model):
     song_img_file_path = models.CharField('歌曲图片文件', max_length=100)
     song_file_path = models.CharField('歌曲文件', max_length=100)
     song_download_url = models.URLField('下载地址', max_length=200)
-    song_lyrics = models.CharField('歌曲文件', max_length=2000, default='')
-    # song_lyrics = models.CharField('歌词', max_length=50, default='暂无歌词')
+    # song_lyrics = models.CharField('歌曲文件', max_length=2000, default='')
+    song_lyrics = models.TextField('歌词', max_length=2000, default='暂无歌词', blank=True)
+
     # song_languages = models.CharField('语种', max_length=20, default='')
-    label = models.ForeignKey(Label, on_delete=models.CASCADE, verbose_name='歌名分类', default=None)
+    # label = models.ForeignKey(Label, on_delete=models.CASCADE, verbose_name='歌名分类', default=None)
 
     def __str__(self):
         return self.song_title
 
     class Meta:
         # 设置Admin界面的显示内容
-        verbose_name = '歌曲信息'
-        verbose_name_plural = '歌曲信息'
+        verbose_name = 'song_info'
+        verbose_name_plural = 'song_info'
 
 
 # 歌曲动态表dynamic
@@ -51,8 +52,8 @@ class Dynamic(models.Model):
 
     class Meta:
         # 设置Admin界面的显示内容
-        verbose_name = '歌曲动态'
-        verbose_name_plural = '歌曲动态'
+        verbose_name = 'dynamic'
+        verbose_name_plural = 'dynamic'
 
 
 # 歌曲点评表comment

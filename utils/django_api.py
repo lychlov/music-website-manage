@@ -34,3 +34,18 @@ def save_song(item):
     song_info.save()
     print("成功爬取歌曲：%s" % song_info.song_id)
     return True
+
+
+def get_one_song_without_lyrics():
+    try:
+        result = models.Song.objects.filter(song_lyrics='')
+        return result
+    except:
+        return None
+
+
+def save_lyrics(song_id, lyrics):
+    song = models.Song.objects.get(song_id=song_id)
+    song.song_lyrics = lyrics
+    song.save()
+    pass
